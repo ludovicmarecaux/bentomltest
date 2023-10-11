@@ -1,0 +1,49 @@
+name: ci
+on:
+  push:
+    branches:
+      - 'main'
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: bentoml/setup-bentoml-action@v1
+        with:
+          python-version: '3.10'
+          bentoml-version: 'main'
+          cache: 'pip'
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          registry: https://bentomltest.azurecr.io/
+          username: ${{ secrets.AzureAppService_ContainerUsername_ec7dccbee54e4b6ea3ca603855b27749 }}
+          password: ${{ secrets.AzureAppService_ContainerPassword_9868ca539765466882a1c8a12d31bcde }}
+      - name: Build Bento
+        run: bentoml build 
+      - name: Build and push
+        uses: bentoml/containerize-push-action@v1
+        with:
+          tags: bentomltest.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_ec7dccbee54e4b6ea3ca603855b27749 }}/iris_classifier:${{ github.sha }}
+          bento-tag: my-bento:latest
+          push: true
+          tags: user/app:latest
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'bentomltest'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_c7ce826e8fd54efe92bf4c2df7e90de1 }}
+        images: 'bentomltest.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_ec7dccbee54e4b6ea3ca603855b27749 }}/iris_classifier:${{ github.sha }}'
