@@ -31,19 +31,4 @@ jobs:
           bento-tag: my-bento:latest
           push: true
           
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-    - name: Deploy to Azure Web App
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'bentomltest'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_c7ce826e8fd54efe92bf4c2df7e90de1 }}
-        images: 'bentomltest.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_ec7dccbee54e4b6ea3ca603855b27749 }}/iris_classifier:${{ github.sha }}'
+  
