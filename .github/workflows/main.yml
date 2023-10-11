@@ -23,6 +23,11 @@ jobs:
           username: ${{ secrets.AzureAppService_ContainerUsername_ec7dccbee54e4b6ea3ca603855b27749 }}
           password: ${{ secrets.AzureAppService_ContainerPassword_9868ca539765466882a1c8a12d31bcde }}
 
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+
       - name: Check file existence
         id: check_files
         uses: andstor/file-existence-action@v2
@@ -31,8 +36,9 @@ jobs:
         
       
       - name: Build Bento
-          if: steps.check_files.outputs.files_exists == 'true'
-          run: bentoml build
+          uses: actions/checkout@v3
+          uses: bentoml/build-bentoml-action@v1
+          
         
       - name: Build and push
         uses: bentoml/containerize-push-action@v1
