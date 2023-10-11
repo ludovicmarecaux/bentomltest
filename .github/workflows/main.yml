@@ -23,7 +23,8 @@ jobs:
           username: ${{ secrets.AzureAppService_ContainerUsername_ec7dccbee54e4b6ea3ca603855b27749 }}
           password: ${{ secrets.AzureAppService_ContainerPassword_9868ca539765466882a1c8a12d31bcde }}
       - name: Build Bento
-          run: bentoml build -f bentofile.yaml
+          if test -f "bentofile.yaml"
+          run: bentoml build
         
       - name: Build and push
         uses: bentoml/containerize-push-action@v1
