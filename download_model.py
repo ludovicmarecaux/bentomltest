@@ -3,12 +3,14 @@ import bentoml
 from sklearn import svm
 from sklearn import datasets
 
+from sklearn.linear_model import SGDClassifier
+
 # Load training data set
 iris = datasets.load_iris()
 X, y = iris.data, iris.target
 
 # Train the model
-clf = svm.SVC(gamma='scale')
+clf = SGDClassifier(loss="hinge", penalty="l2")
 clf.fit(X, y)
 
 # Save model to the BentoML local Model Store
