@@ -22,9 +22,10 @@ jobs:
           registry: https://bentomltest.azurecr.io/
           username: ${{ secrets.AzureAppService_ContainerUsername_ec7dccbee54e4b6ea3ca603855b27749 }}
           password: ${{ secrets.AzureAppService_ContainerPassword_9868ca539765466882a1c8a12d31bcde }}
+      - name: créer model
+        run: python download_model.py
       - name: Build Bento
-        uses: build-bentoml-action@v1
-        id: bento
+        run: bentoml build 
           
         
       - name: Build and push
