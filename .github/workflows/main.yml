@@ -1,10 +1,10 @@
-name: ci
+name: bentoml workflow
 on:
   push:
     branches:
       - 'main'
 jobs:
-  docker:
+  auzure deploiement:
     runs-on: ubuntu-latest
     steps:
       - uses: bentoml/setup-bentoml-action@v1
@@ -24,6 +24,8 @@ jobs:
           password: ${{ secrets.AzureAppService_ContainerPassword_9868ca539765466882a1c8a12d31bcde }}
       - uses: actions/checkout@v1
       - run: pip install -r requirements.txt
+      - name: créer model
+        run: python download_model.py
       - name: Build Bento
         run: bentoml build 
           
