@@ -10,7 +10,7 @@ iris = datasets.load_iris()
 X, y = iris.data, iris.target
 
 # Train the model
-clf = SGDClassifier(kernel="linear")
+clf = SGDClassifier()
 clf.fit(X, y)
 
 # Save model to the BentoML local Model Store
