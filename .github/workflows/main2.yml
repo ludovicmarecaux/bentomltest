@@ -33,7 +33,7 @@ jobs:
       - name: Build and push
         uses: bentoml/containerize-push-action@v1
         with:
-          tags: bentomltest.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_ec7dccbee54e4b6ea3ca603855b27749 }}/iris_classifier:${{ github.sha }}
+          tags: bentomltest.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_ec7dccbee54e4b6ea3ca603855b27749 }}/bentomltest/iris_classifier:${{ github.sha }}
           bento-tag: iris_classifier:latest
           push: true          
   deploy:
